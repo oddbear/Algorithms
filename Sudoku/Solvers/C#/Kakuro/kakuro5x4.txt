@@ -1,0 +1,7 @@
+[
+{ "empty" : true }, { "down" : 17 },    { "down" : 11 },    { "empty" : true },
+{ "right" : 10 },   { "clear" : true }, { "clear" : true }, { "empty" : true },
+{ "right" : 13 },   { "clear" : true }, { "clear" : true }, { "down" : 16 },
+{ "empty" : true }, { "right" : 11 },   { "clear" : true }, { "clear" : true },
+{ "empty" : true }, { "right" : 10 },   { "clear" : true }, { "clear" : true }
+]
