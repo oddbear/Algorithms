@@ -10,18 +10,18 @@ namespace d6
 	int SIZE;
 
 	int FindUsedForLocal(int n, int s[]);
-	bool finn_losning(int n, int s[]);
+	bool find_solution(int n, int s[]);
 
-	void finn_losning(int arr[], int x, int y)
+	void find_solution(int arr[], int x, int y)
 	{
 		LWIDTH = x;
 		LHEIGHT = y;
 		COLUMNS = LWIDTH * LHEIGHT;
 		SIZE = COLUMNS * COLUMNS;
-		finn_losning(0, arr);
+		find_solution(0, arr);
 	}
 
-	bool finn_losning(int n, int s[])
+	bool find_solution(int n, int s[])
 	{
 		for (; n < SIZE && s[n] != 0; n++) ;
 
@@ -33,7 +33,7 @@ namespace d6
 			if ((brukt & (1 << i)) == 0)
 			{
 				s[n] = i;
-				if (finn_losning(n + 1, s))
+				if (find_solution(n + 1, s))
 					return true;
 			}
 

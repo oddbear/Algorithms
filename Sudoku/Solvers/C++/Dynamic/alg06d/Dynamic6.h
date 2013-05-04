@@ -1,4 +1,4 @@
 namespace d6
 {
-	void finn_losning(int arr[], int x, int y);
+	void find_solution(int arr[], int x, int y);
 }
