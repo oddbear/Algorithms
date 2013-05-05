@@ -18,62 +18,62 @@ namespace fs9
 	void find_solution(int arr[])
 	{
 		for (int i = 0; i < SIZE; i++)
-			arr[i] = GetShifted(arr[i]);
+			arr[i] = GetShifted(arr[i]); //Fill array with values in bit shifted base 2.
 
 		find_solution(0, arr);
 
 		for (int i = 0; i < SIZE; i++)
-			arr[i] = GetUnShifted(arr[i]);
+			arr[i] = GetUnShifted(arr[i]); //Fill array with solution in base 10.
 	}
 
 	bool find_solution(int n, int s[])
 	{
-		int b[SIZE];
+		int b[SIZE]; //Array to store posibles.
 		for(int i = 0; i < SIZE; i++)
 			b[i] = EMPTY;
 
-		for (; n < SIZE && s[n] != EMPTY; n++) ;
-		int min = n;
+		for (; n < SIZE && s[n] != EMPTY; n++) ; //Skips all the first positions with values, finds the first empty.
+		int min = n; //First position without a value.
 
 		while(n < SIZE)
 		{
 			int i, brukt;
 
-			if (s[n] != EMPTY)
+			if (s[n] != EMPTY) //Resumes states of posibles at n, and tries next.
 			{
 				brukt = b[n];
 				i = s[n] << 1;
 			}
-			else
+			else //Finds all posibles for the position.
 			{
 				brukt = b[n] = FindUsedForLocal(n, s);
 				i = ONE;
 			}
 
 			for (; i < FINAL; i <<= 1)
-				if ((brukt & i) == 0)
+				if ((brukt & i) == 0) //Fins and tries first posible value.
 				{
-					s[n] = i;
+					s[n] = i; //Sets and tries a posible value.
 					break;
 				}
 		
-			if (i == FINAL)
+			if (i == FINAL) //All posibles tested.
 			{
-				s[n] = b[n] = EMPTY;
+				s[n] = b[n] = EMPTY; //Clears the values.
 
-				if (n == min)
-					return false;
+				if (n == min)	//No solution found.
+					return false; //It has gone throught all posiblities and not found any solution.
 
-				for (; n > min && b[n] == EMPTY; n--) ;
+				for (; n > min && b[n] == EMPTY; n--) ; //Skips all n's that is not set by code.
 			}
 			else
 			{
-				n++;
-				for (; n < SIZE && s[n] != EMPTY && b[n] == EMPTY; n++) ;
+				n++; //Gets ready to try posibles at the next position.
+				for (; n < SIZE && s[n] != EMPTY && b[n] == EMPTY; n++) ; //Skips all n's that is not set by code.
 			}
 		}
 
-		return true;
+		return true;	//Solution found.
 	}
 
 	int FindUsedForLocal(int n, int s[])

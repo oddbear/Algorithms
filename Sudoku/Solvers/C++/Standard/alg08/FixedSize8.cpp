@@ -17,50 +17,50 @@ namespace fs8
 	bool find_solution(int n, int s[])
 	{
 		const int MAX = 81;
-		int b[MAX];
+		int b[MAX]; //Array to store posibles.
 		for(int i = 0; i < MAX; i++)
 			b[i] = 0;
 
-		for (; n < MAX && s[n] != 0; n++) ;
-		int min = n;
+		for (; n < MAX && s[n] != 0; n++) ; //Skips all the first positions with values, finds the first empty.
+		int min = n; //First position without a value.
 	
 		while(n < MAX)
 		{
 			int i, brukt;
 
-			if (s[n] != 0)
+			if (s[n] != 0) //Resumes states of posibles at n, and tries next.
 			{
 				brukt = b[n];
 				i = s[n] + 1;
 			}
-			else
+			else //Finds all posibles for the position.
 			{
 				brukt = b[n] = FindUsedForLocal(n, s);
 				i = 1;
 			}
 
 			for (; i <= 9; i++)
-				if((brukt & (1 << i)) == 0)
+				if((brukt & (1 << i)) == 0) //Fins and tries first posible value.
 				{
-					s[n] = i;
+					s[n] = i; //Sets and tries a posible value.
 					break;
 				}
 		
-			if (i == 10)
+			if (i == 10) //All posibles tested.
 			{
 				s[n] = b[n] = 0;
-				if (n == min)
-					return false;
-				for (; n > min && b[n] == 0; n--) ;
+				if (n == min)	//No solution found.
+					return false; //It has gone throught all posiblities and not found any solution.
+				for (; n > min && b[n] == 0; n--) ; //Skips all n's that is not set by code.
 			}
 			else
 			{
-				n++;
-				for (; n < MAX && s[n] != 0 && b[n] == 0; n++) ;
+				n++; //Gets ready to try posibles at the next position.
+				for (; n < MAX && s[n] != 0 && b[n] == 0; n++) ; //Skips all n's that is not set by code.
 			}
 		}
 
-		return true;
+		return true;	//Solution found.
 	}
 
 	int FindUsedForLocal(int n, int s[])
