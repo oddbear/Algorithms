@@ -3,11 +3,11 @@
 
 namespace js10
 {
-	bool finn_losning(int n, Square* t);
+	bool find_solution(int n, Square* t);
 	int GetShifted(int i);
 	int GetUnShifted(int i);
 
-	void finn_losning(int sarr[], int garr[])
+	void find_solution(int sarr[], int garr[])
 	{
 		int* xa = new int[WIDTH];
 		int* ya = new int[WIDTH];
@@ -20,7 +20,7 @@ namespace js10
 		for (int i = 0; i < SIZE; i++)
 			b[i].Populate(i, sarr[i], xa, ya, ga, garr[i]);
 
-		finn_losning(0, b);
+		find_solution(0, b);
 
 		for (int i = 0; i < SIZE; i++)
 			sarr[i] = GetUnShifted(b[i].v);
@@ -28,30 +28,30 @@ namespace js10
 		delete[] b, xa, ya, ga;
 	}
 
-	bool finn_losning(int n, Square* t)
+	bool find_solution(int n, Square* t)
 	{
-		for (; n < SIZE && t[n].v != 0; n++) ;
+		for (; n < SIZE && t[n].v != 0; n++) ; //Skips those who already has values.
 
-		if (n == SIZE)
+		if (n == SIZE) //solution found, if compiled with false, it will do all posible combinations.
 			return true;
 
-		int brukt = t[n].GetPosibles();
+		int brukt = t[n].GetPosibles(); //Find all posible values to try.
 
-		if (brukt == ALL)
+		if (brukt == ALL) //If none values is posible, this path cannot be a part of the solution.
 			return false;
 
 		for (int i = 1; i < FINAL; i <<= 1)
-			if ((brukt & i) == EMPTY)
-			{
-				t[n].SetValue(i);
+			if ((brukt & i) == EMPTY) //Checks if value(i) is a posible,
+			{                         // EMPTY means that it is not a conflict on x, y or g, and might be a posibility.
+				t[n].SetValue(i); //Sets i as a posbile.
 
-				if (finn_losning(n + 1, t))
-					return true;
+				if (find_solution(n + 1, t)) //Tries next position.
+					return true; //if solution is found, don't do more work.
 
-				t[n].RemoveValue();
+				t[n].RemoveValue(); //Removes i as a posbile.
 			}
 
-		return false;
+		return false; //solution not found, yet.
 	}
 
 	Square::Square() { };

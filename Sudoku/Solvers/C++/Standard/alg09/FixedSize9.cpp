@@ -1,3 +1,7 @@
+/*
+ * A version that does not use recursion.
+ */
+
 #include "FixedSize9.h"
 
 namespace fs9
@@ -7,22 +11,22 @@ namespace fs9
 	const int SIZE = 81;
 
 	int FindUsedForLocal(int n, int s[]);
-	bool finn_losning(int n, int s[]);
+	bool find_solution(int n, int s[]);
 	int GetShifted(int i);
 	int GetUnShifted(int i);
 	
-	void finn_losning(int arr[])
+	void find_solution(int arr[])
 	{
 		for (int i = 0; i < SIZE; i++)
 			arr[i] = GetShifted(arr[i]);
 
-		finn_losning(0, arr);
+		find_solution(0, arr);
 
 		for (int i = 0; i < SIZE; i++)
 			arr[i] = GetUnShifted(arr[i]);
 	}
 
-	bool finn_losning(int n, int s[])
+	bool find_solution(int n, int s[])
 	{
 		int b[SIZE];
 		for(int i = 0; i < SIZE; i++)
@@ -74,29 +78,29 @@ namespace fs9
 
 	int FindUsedForLocal(int n, int s[])
 	{
-		int local_x = n % WIDTH;
+		int local_x = n % WIDTH; //Finds the first position in the y axis.
 		int local_y = n / WIDTH;
 
-		int start_y = local_y * WIDTH;
+		int start_y = local_y * WIDTH; //Finds the first position in the x axis.
 
-		int anchor = n
+		int anchor = n //Finds the first position in the group.
 			- local_x % GROUPWIDTH
 			- (local_y % GROUPWIDTH) * WIDTH;
 
 		int brukt = 0;
 
-		for (int i = 0; i < WIDTH; i++)
-		{
-			brukt |= s[start_y + i];
-			brukt |= s[i * WIDTH + local_x];
-			brukt |= s[
+		for (int i = 0; i < WIDTH; i++) //Test all x, y and group values,
+		{				                // does not mather if it also checks the value in the n position.
+			brukt |= s[start_y + i]; //Gather info from the y axis.
+			brukt |= s[i * WIDTH + local_x];	//Gather info from the x axis.
+			brukt |= s[ //Gather info from the group.
 				anchor
 				+ (i / GROUPWIDTH) * WIDTH
 				+ (i % GROUPWIDTH)
 			];
 		}
 
-		return brukt;
+		return brukt; //Returns all the values it cannot be. All not set is a posiblity.
 	}
 
 	int GetShifted(int i)

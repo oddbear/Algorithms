@@ -1,6 +1,6 @@
 namespace fs7
 {
-	void finn_losning(int arr[]);
+	void find_solution(int arr[]);
 
 	struct Square
 	{

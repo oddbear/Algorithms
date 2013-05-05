@@ -1,4 +1,4 @@
 namespace fs8
 {
-	void finn_losning(int arr[]);
+	void find_solution(int arr[]);
 }

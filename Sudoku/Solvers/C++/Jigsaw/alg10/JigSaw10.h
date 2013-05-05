@@ -18,7 +18,7 @@ namespace js10
 	const int PADDING = WIDTH * GROUPWIDTH;
 	const int SIZE = 81;
 
-	void finn_losning(int sarr[], int garr[]);
+	void find_solution(int sarr[], int garr[]);
 
 	class Square
 	{

@@ -18,7 +18,7 @@ namespace fs10
 	const int PADDING = WIDTH * GROUPWIDTH;
 	const int SIZE = 81;
 
-	void finn_losning(int arr[]);
+	void find_solution(int arr[]);
 
 	class Square
 	{

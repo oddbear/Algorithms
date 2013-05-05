@@ -12,5 +12,5 @@ namespace fs9
 	const int NINE	= 256;
 	const int FINAL	= 512;
 
-	void finn_losning(int arr[]);
+	void find_solution(int arr[]);
 }

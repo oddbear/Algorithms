@@ -1,3 +1,7 @@
+/*
+ * A version that does support dynamic sizes of the board.
+ */
+
 #include "Dynamic6.h"
 
 using namespace std;

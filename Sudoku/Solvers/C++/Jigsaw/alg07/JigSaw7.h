@@ -1,6 +1,6 @@
 namespace js7
 {
-	void finn_losning(int arr[], int arrG[]);
+	void find_solution(int arr[], int arrG[]);
 
 	struct Square
 	{

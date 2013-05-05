@@ -4,7 +4,7 @@
 namespace fs7
 {
 	int FindUsedForLocal(int n, Square** t, Box* b);
-	bool finn_losning(int n, Square** t, Box* b);
+	bool find_solution(int n, Square** t, Box* b);
 
 	Square* CreateSquare(int n, int s[]);
 
@@ -12,7 +12,7 @@ namespace fs7
 	bool SortY (Square* a, Square* b) { return ( a->y < b->y); }
 	bool SortG (Square* a, Square* b) { return ( a->g < b->g); }
 
-	void finn_losning(int arr[])
+	void find_solution(int arr[])
 	{
 		const int SIZE = 81;
 		Square** b = new Square*[SIZE];
@@ -32,7 +32,7 @@ namespace fs7
 
 		Box* box = new Box(x, y, g);
 
-		finn_losning(0, b, box);
+		find_solution(0, b, box);
 
 		for (int i = 0; i < SIZE; i++)
 			arr[i] = b[i]->v;
@@ -70,26 +70,26 @@ namespace fs7
 		return brukt;
 	}
 
-	bool finn_losning(int n, Square** t, Box* b)
+	bool find_solution(int n, Square** t, Box* b)
 	{
-		for (; n < 81 && t[n]->v != 0; n++) ;
+		for (; n < 81 && t[n]->v != 0; n++) ; //Skips those who already has values.
 
-		if (n == 81)
+		if (n == 81) //solution found, if compiled with false, it will do all posible combinations.
 			return true;
 
-		int brukt = FindUsedForLocal(n, t, b);
+		int brukt = FindUsedForLocal(n, t, b); //Find all posible values to try.
 
 		for (int i = 1; i <= 9; i++)
-			if ((brukt & (1 << i)) == 0)
-			{
-				t[n]->v = i;
-				if (finn_losning(n + 1, t, b))
+			if ((brukt & (1 << i)) == 0) //Checks if value(i) is a posible,
+			{                            // 0 means that it is not a conflict on x, y or g, and might be a posibility.
+				t[n]->v = i; //Sets i as a posbile.
+				if (find_solution(n + 1, t, b)) //Tries next position.
 					return true;
 			}
 
-		t[n]->v = 0;
+		t[n]->v = 0; //None of the posibles worked. Resets the value.
 
-		return false;
+		return false; //solution not found, yet.
 	}
 
 	Square::Square(int v, int x, int y, int g)
