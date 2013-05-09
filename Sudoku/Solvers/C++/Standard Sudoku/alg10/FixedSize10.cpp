@@ -57,7 +57,7 @@ namespace fs10
 
 	Square::Square(int n, int v, int* xa, int* ya, int* ga)
 	{
-		this->lx = n % WIDTH; //Pre calulate x index.
+		this->lx = n % WIDTH;	//Pre calulate x index.
 		this->ly = n / WIDTH;	//Pre calulate y index.
 		this->lg = (n / GROUPWIDTH) % GROUPWIDTH + (n / PADDING) * GROUPWIDTH; //Pre calulate group index.
 		

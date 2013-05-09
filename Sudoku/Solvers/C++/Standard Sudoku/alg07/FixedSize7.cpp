@@ -67,7 +67,7 @@ namespace fs7
 			brukt |= 1 << b->g[pg + i]->v; //Get the already used by other squares on the g axis.
 		}
 
-		return brukt;
+		return brukt; //Returns all the values it cannot be. All not set is a posiblity.
 	}
 
 	bool find_solution(int n, Square** t, Box* b)

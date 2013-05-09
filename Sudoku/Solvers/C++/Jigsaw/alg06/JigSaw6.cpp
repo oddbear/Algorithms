@@ -19,16 +19,17 @@ namespace js6
 		SIZE = COLUMNS * COLUMNS;
 
 		int* map = CreateArray(SIZE);
-		int* groups = CreateArray(SIZE);
+		int* groups = CreateArray(SIZE); //SIZE?, COLUMNS should be OK.
 
-		for (int i = 0; i < SIZE; i++)
+		for (int i = 0; i < SIZE; i++) //Makes the mapping array, that maps the groups together.
 		{
 			int grp = arrG[i];
-			map[grp * COLUMNS + groups[grp]++] = i;
+			map[grp * COLUMNS + groups[grp]++] = i; //"Partitions" the groups by the width, and increment the others in the group to spread them over the "partition".
+			//Ex: group = 2, columns = 9(default sudoku), groups[] increments by the group.   First: 2 * 9 + 0,   Next: 2 * 9 + 1... Last in group: 2 * 9 + 8, then: 3 * 9 + 0... etc.
 		}
-		delete[] groups;
+		delete[] groups; //Clears the groups array.
 		find_solution(0, arr, arrG, map);
-		delete[] map;
+		delete[] map; //Clears the map array.
 	}
 
 	bool find_solution(int n, int s[], int g[], int map[])
@@ -71,7 +72,7 @@ namespace js6
 		return brukt; //Returns all the values it cannot be. All not set is a posiblity.
 	}
 
-	int* CreateArray(int size)
+	int* CreateArray(int size) //Creates an array with empty values.
 	{
 		int* arr = new int[size];
 		for (int i = 0; i < size; i++)
