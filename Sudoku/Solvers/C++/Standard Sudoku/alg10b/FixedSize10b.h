@@ -1,17 +1,17 @@
 namespace fs10b
 {
-	const int EMPTY	=   0;
-	const int ONE	=   1;
-	const int TWO	=   2;
-	const int THREE	=   4;
-	const int FOUR	=   8;
-	const int FIVE	=  16;
-	const int SIX	=  32;
-	const int SEVEN	=  64;
-	const int EIGHT	= 128;
-	const int NINE	= 256;
-	const int FINAL	= 512;
-	const int ALL	= FINAL - 1;
+	const int EMPTY	=   0;			//00 0000 0000
+	const int ONE	=   1;			//00 0000 0001
+	const int TWO	=   2;			//00 0000 0010
+	const int THREE	=   4;			//00 0000 0100
+	const int FOUR	=   8;			//00 0000 1000
+	const int FIVE	=  16;			//00 0001 0000
+	const int SIX	=  32;			//00 0010 0000
+	const int SEVEN	=  64;			//00 0100 0000
+	const int EIGHT	= 128;			//00 1000 0000
+	const int NINE	= 256;			//01 0000 0000
+	const int FINAL	= 512;			//10 0000 0000
+	const int ALL	= FINAL - 1;	//01 1111 1111
 
 	const int GROUPWIDTH = 3;
 	const int WIDTH = 9;
@@ -23,10 +23,10 @@ namespace fs10b
 	class Square
 	{
 	private:
-		int lx, ly, lg;
+		int lx, ly, lg;	//Index in shared static arrays.
 	public:
 		int v;
-		static int *xa, *ya, *ga;
+		static int *xa, *ya, *ga;	//Shared static values.
 
 		Square();
 		void Populate(int n, int v);

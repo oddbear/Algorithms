@@ -8,25 +8,25 @@ namespace fs10
 
 	void find_solution(int arr[])
 	{
-		int* xa = new int[WIDTH];
-		int* ya = new int[WIDTH];
-		int* ga = new int[WIDTH];
+		int* xa = new int[WIDTH]; //Creates shared array.
+		int* ya = new int[WIDTH]; //Creates shared array.
+		int* ga = new int[WIDTH]; //Creates shared array.
 
-		for (int i = 0; i < WIDTH; i++)
+		for (int i = 0; i < WIDTH; i++) //Reset all values in shared static array.
 			xa[i] = ya[i] = ga[i] = EMPTY;
 
 		Square** b = new Square*[SIZE];
-		for (int i = 0; i < SIZE; i++)
-			b[i] = new Square(i, arr[i], xa, ya, ga);
+		for (int i = 0; i < SIZE; i++) //Convert from value array to Square array.
+			b[i] = new Square(i, arr[i], xa, ya, ga); //Create each Square in the array, and populate it.
 
 		find_solution(0, b);
 
-		for (int i = 0; i < SIZE; i++)
+		for (int i = 0; i < SIZE; i++)	//Set solution from bit stream to 10base values.
 			arr[i] = GetUnShifted(b[i]->v);
 
 		for (int i = 0; i < SIZE; i++)
-			delete b[i];
-		delete[] b, xa, ya, ga;
+			delete b[i]; //Cleanup each Square.
+		delete[] b, xa, ya, ga; //Cleanup arrays.
 	}
 
 	bool find_solution(int n, Square** t)
@@ -57,15 +57,15 @@ namespace fs10
 
 	Square::Square(int n, int v, int* xa, int* ya, int* ga)
 	{
-		this->lx = n % WIDTH; 
-		this->ly = n / WIDTH;
-		this->lg = (n / GROUPWIDTH) % GROUPWIDTH + (n / PADDING) * GROUPWIDTH;
+		this->lx = n % WIDTH; //Pre calulate x index.
+		this->ly = n / WIDTH;	//Pre calulate y index.
+		this->lg = (n / GROUPWIDTH) % GROUPWIDTH + (n / PADDING) * GROUPWIDTH; //Pre calulate group index.
 		
-		this->xa = xa;
-		this->ya = ya;
-		this->ga = ga;
+		this->xa = xa; //Sets the shared x-axis array as a local array.
+		this->ya = ya; //Sets the shared y-axis array as a local array.
+		this->ga = ga; //Sets the shared group array as a local array.
 		
-		if (v != EMPTY)
+		if (v != EMPTY) //If Square has a value. Set the shifted value.
 			SetValue(GetShifted(v));
 		else
 			this->v = EMPTY;
@@ -73,42 +73,42 @@ namespace fs10
 
 	int Square::GetPosibles()
 	{
-		return this->xa[this->lx] | this->ya[this->ly] | this->ga[this->lg];
+		return this->xa[this->lx] | this->ya[this->ly] | this->ga[this->lg]; //Combine all used on x, y, and g. Thos who are not set, is posibles.
 	}
 	
 	void Square::SetValue(int value)
 	{
-		this->v = value;
-		this->xa[this->lx] |= this->v;
-		this->ya[this->ly] |= this->v;
-		this->ga[this->lg] |= this->v;
+		this->v = value;				//Sets the value
+		this->xa[this->lx] |= this->v;	//Set value as used for every one on x axis.
+		this->ya[this->ly] |= this->v;	//Set value as used for every one on y axis.
+		this->ga[this->lg] |= this->v;	//Set value as used for every one in group.
 	}
 	
 	void Square::RemoveValue()
 	{
-		this->xa[this->lx] ^= this->v;
-		this->ya[this->ly] ^= this->v;
-		this->ga[this->lg] ^= this->v;
-		this->v = EMPTY;
+		this->xa[this->lx] ^= this->v;	//Remove value as used for every one in x axis.
+		this->ya[this->ly] ^= this->v;	//Remove value as used for every one in y axis.
+		this->ga[this->lg] ^= this->v;	//Remove value as used for every one in group.
+		this->v = EMPTY;				//Remove value, sets it to empty.
 	}
 
-	Square::~Square() { };
+	Square::~Square() { };	//Destructure not used.
 
 	int GetShifted(int i)
 	{
 		switch (i)
 		{
-			case 1:  return ONE;
-			case 2:  return TWO;
-			case 3:  return THREE;
-			case 4:  return FOUR;
-			case 5:  return FIVE;
-			case 6:  return SIX;
-			case 7:  return SEVEN;
-			case 8:  return EIGHT;
-			case 9:  return NINE;
-			case 10: return FINAL;
-			default: return EMPTY;
+			case 1:  return ONE;			//00 0000 0001
+			case 2:  return TWO;			//00 0000 0010
+			case 3:  return THREE;			//00 0000 0100
+			case 4:  return FOUR;			//00 0000 1000
+			case 5:  return FIVE;			//00 0001 0000
+			case 6:  return SIX;			//00 0010 0000
+			case 7:  return SEVEN;			//00 0100 0000
+			case 8:  return EIGHT;			//00 1000 0000
+			case 9:  return NINE;			//01 0000 0000
+			case 10: return FINAL;			//10 0000 0000
+			default: return EMPTY;			//00 0000 0000
 		}
 	}
 
@@ -116,17 +116,17 @@ namespace fs10
 	{
 		switch (i)
 		{
-			case ONE:   return 1;
-			case TWO:   return 2;
-			case THREE: return 3;
-			case FOUR:  return 4;
-			case FIVE:  return 5;
-			case SIX:   return 6;
-			case SEVEN: return 7;
-			case EIGHT: return 8;
-			case NINE:  return 9;
-			case FINAL: return 10;
-			default:    return 0;
+			case ONE:   return 1;			//00 0000 0001
+			case TWO:   return 2;			//00 0000 0010
+			case THREE: return 3;			//00 0000 0100
+			case FOUR:  return 4;			//00 0000 1000
+			case FIVE:  return 5;			//00 0001 0000
+			case SIX:   return 6;			//00 0010 0000
+			case SEVEN: return 7;			//00 0100 0000
+			case EIGHT: return 8;			//00 1000 0000
+			case NINE:  return 9;			//01 0000 0000
+			case FINAL: return 10;			//10 0000 0000
+			default:    return 0;			//00 0000 0000
 		}
 	}
 }
