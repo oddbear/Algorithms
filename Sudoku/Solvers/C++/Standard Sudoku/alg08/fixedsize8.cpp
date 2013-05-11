@@ -2,7 +2,7 @@
  * A version that does not use recursion.
  */
 
-#include "FixedSize8.h"
+#include "fixedsize8.h"
 
 namespace fs8
 {

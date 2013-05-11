@@ -1,4 +1,4 @@
-#include "FixedSize7.h"
+#include "fixedsize7.h"
 #include <algorithm>
 
 namespace fs7
