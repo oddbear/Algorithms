@@ -1,4 +1,4 @@
-#include "JigSaw6.h"
+#include "jigsaw6.h"
 
 namespace js6
 {
