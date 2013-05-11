@@ -1,4 +1,4 @@
-#include "FixedSize10a.h"
+#include "fixedsize10a.h"
 
 namespace fs10a
 {
