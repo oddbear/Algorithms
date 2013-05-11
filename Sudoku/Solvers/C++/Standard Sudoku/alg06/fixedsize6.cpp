@@ -1,4 +1,4 @@
-#include "FixedSize6.h"
+#include "fixedsize6.h"
 
 namespace fs6
 {
