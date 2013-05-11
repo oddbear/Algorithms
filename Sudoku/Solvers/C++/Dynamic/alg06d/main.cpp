@@ -1,7 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <ctime>
-#include "Dynamic6.h"
+#include "dynamic6.h"
 
 int main()
 {
