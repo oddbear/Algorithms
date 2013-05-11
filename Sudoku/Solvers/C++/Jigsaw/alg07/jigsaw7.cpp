@@ -1,4 +1,4 @@
-#include "JigSaw7.h"
+#include "jigsaw7.h"
 #include <algorithm>
 
 namespace js7
