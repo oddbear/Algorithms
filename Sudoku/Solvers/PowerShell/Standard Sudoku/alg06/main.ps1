@@ -30,7 +30,7 @@ function findUsedForLocal {
     param ([int]$n, [int[]]$s)
 
 	$local_x = $n % 9; #Finds the first position in the y axis.
-	$local_y = [math]::truncate($n / 9);
+	$local_y = [math]::truncate($n / 9); #use [math]::truncate, or cast to [int]
 	
 	$start_y = $local_y * 9; #Finds the first position in the x axis.
 	
