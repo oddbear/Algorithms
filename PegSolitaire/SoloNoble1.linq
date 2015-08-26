@@ -28,7 +28,7 @@ static bool IsValidBorder(Fot fot)
 	 || fot.To   < 0 || fot.To   >= w * h)
 		return false;
 
-	return fot.IsRight() || fot.IsLeft()
+	return fot.IsRight || fot.IsLeft
 		? fot.From / w == fot.To / w
 		: fot.From % w == fot.To % w;
 }
@@ -48,25 +48,25 @@ static Fot[] CreatePossibles(Fot fot)
 	//All possible moves by change:
 	int i = 0;
 	var arr = new Fot[11];
-	if (!fot.IsLeft())
+	if (!fot.IsLeft)
 	{
 		arr[i++] = new Fot(from: f - 2, over: f - 1, to: f); //From (now empty), except jumping back
 		arr[i++] = new Fot(from: t, over: t + 1, to: t + 2); //To (now set), keep moving //TODO: is this correct in inverse?
 		arr[i++] = new Fot(from: t + 1, over: t, to: t - 1); //New moves possible, can now jump over this, but the old over position vil always be empty.
 	}
-	if (!fot.IsRight())
+	if (!fot.IsRight)
 	{
 		arr[i++] = new Fot(from: f + 2, over: f + 1, to: f);
 		arr[i++] = new Fot(from: t, over: t - 1, to: t - 2);
 		arr[i++] = new Fot(from: t - 1, over: t, to: t + 1);
 	}
-	if (!fot.IsUp())
+	if (!fot.IsUp)
 	{
 		arr[i++] = new Fot(from: f - w - w, over: f - w, to: f);
 		arr[i++] = new Fot(from: t, over: t + w, to: t + w + w);
 		arr[i++] = new Fot(from: t + w, over: t, to: t - w);
 	}
-	if (!fot.IsDown())
+	if (!fot.IsDown)
 	{
 		arr[i++] = new Fot(from: f + w + w, over: f + w, to: f);
 		arr[i++] = new Fot(from: t, over: t - w, to: t - w - w);
@@ -74,12 +74,12 @@ static Fot[] CreatePossibles(Fot fot)
 	}
 
 	//Over (now empty), but two will always be empty.
-	if (fot.IsUp() || fot.IsDown())
+	if (fot.IsUp || fot.IsDown)
 	{
 		arr[i++] = new Fot(from: o - 2, over: o - 1, to: o);
 		arr[i++] = new Fot(from: o + 2, over: o + 1, to: o);
 	}
-	else //fot.IsLeft() || fot.IsRight()
+	else //fot.IsLeft || fot.IsRight
 	{
 		arr[i++] = new Fot(from: o - w - w, over: o - w, to: o);
 		arr[i++] = new Fot(from: o + w + w, over: o + w, to: o);
@@ -87,48 +87,29 @@ static Fot[] CreatePossibles(Fot fot)
 	
 	return arr;
 }
-bool Move(P[] b, Fot move, int count)
-{
-	if (count == 2)	//ca. 14s.
-	{
-		MakeMove(b, move);
-		for (int y = 0; y < h; y++)
-		{
-			for (int x = 0; x < w; x++)
-			{
-				var p = b[y * w + x];
-				Console.Write(p == P.Set ? 'o' : p == P.Unset ? '.' : ' ');
-			}
-			Console.WriteLine();
-		}
-		return true;
-	}
 
-//	if (!IsValidBorder(move) || !IsValidMove(b, move))
-//		throw new Exception("!");
-	
+static bool Move(P[] b, Fot move, int count)
+{
 	MakeMove(b, move);
+	if (--count == 1) //ca. 14s.
+		return DisplayAndRollbackMove(b, count, move);
+
 	var possibles = CreatePossibles(move);
-	for (int i = 0; i < 11; i++)
+	foreach(var fot in possibles)
 	{
-		var fot = possibles[i];
-		if (IsValidBorder(fot) && IsValidMove(b, fot))
-		{
-			if(Move(b, fot, count - 1))
-				return true;
-			//fot.DisplayVector(w);
-		}
+		if (IsValidBorder(fot) && IsValidMove(b, fot) && Move(b, fot, count))
+			return DisplayAndRollbackMove(b, count, move);
 	}
-	RollbackMove(b, move);
 	
+	RollbackMove(b, move);
 	return false;
 }
-void MakeMove(P[] b, Fot fot)
+static void MakeMove(P[] b, Fot fot)
 {
 	b[fot.From] = b[fot.Over] = P.Unset;
 	b[fot.To] = P.Set;
 }
-void RollbackMove(P[] b, Fot fot)
+static void RollbackMove(P[] b, Fot fot)
 {
 	b[fot.From] = b[fot.Over] = P.Set;
 	b[fot.To] = P.Unset;
@@ -136,9 +117,14 @@ void RollbackMove(P[] b, Fot fot)
 
 class Fot
 {
-	public int From { get; private set; }
-	public int Over { get; private set; }
-	public int To { get; private set; }
+	public int From { get; }
+	public int Over { get; }
+	public int To { get; }
+	
+	public bool IsRight => From + 2 == To; //→
+	public bool IsLeft => From - 2 == To; //←
+	public bool IsUp => From - w - w == To; //↑
+	public bool IsDown => From + w + w == To; //↓
 
 	public Fot(int from, int to)
 	{
@@ -152,22 +138,7 @@ class Fot
 		Over = over;
 		To = to;
 	}
-	public bool IsRight()
-	{
-		return From + 2 == To; //→
-	}
-	public bool IsLeft()
-	{
-		return From - 2 == To; //←
-	}
-	public bool IsUp()
-	{
-		return From - w - w == To; //↑
-	}
-	public bool IsDown()
-	{
-		return From + w + w == To; //↓
-	}
+	
 	public void DisplayVector(int _w)
 	{
 		Console.WriteLine("{0}{1},{2}{3} -> {4}{5}",
@@ -176,6 +147,23 @@ class Fot
 			(char)('a' + (To / _w)), To % _w
 		);
 	}
+}
+
+static bool DisplayAndRollbackMove(P[] b, int nr, Fot move)
+{
+	Console.WriteLine(nr);
+	for (int y = 0; y < h; y++)
+	{
+		for (int x = 0; x < w; x++)
+		{
+			var p = b[y * w + x];
+			Console.Write(p == P.Set ? 'o' : p == P.Unset ? 'x' : '_');
+		}
+		Console.WriteLine();
+	}
+	Console.WriteLine();
+	RollbackMove(b, move);
+	return true;
 }
 
 enum P
@@ -189,13 +177,10 @@ enum P
 static P[] Create(string str)
 {
 	return str
-		.ToCharArray()
-		.Select(ch =>
-			ch == '.' ? P.Unset :
-			ch == 'o' ? P.Set :
-			P.Null
-		)
-		.ToArray();
+		.Select(ch => ch == '.' ? P.Unset
+					: ch == 'o' ? P.Set
+					: P.Null
+		).ToArray();
 }
 static int Count(string str)
 {
