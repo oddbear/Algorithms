@@ -65,6 +65,7 @@ static Fot[] CreatePossibles(Fot fot)
 		arr[i++] = new Fot(from: o + w + w, over: o + w, to: o);
 	}
 	
+	//Skipping impossible moves (ex if ← then → cannot be next move):
 	if (!fot.IsLeft)
 	{
 		arr[i++] = new Fot(from: f - 2, over: f - 1, to: f); //From (now empty), except jumping back
@@ -138,27 +139,12 @@ class Fot
 	public bool IsUp => From - w - w == To; //↑
 	public bool IsDown => From + w + w == To; //↓
 
-//	public Fot(int from, int to)
-//	{
-//		From = from;
-//		Over = from + (to - from) / 2;
-//		To = to;
-//	}
 	public Fot(int from, int over, int to)
 	{
 		From = from;
 		Over = over;
 		To = to;
 	}
-	
-//	public void DisplayVector(int _w)
-//	{
-//		Console.WriteLine("{0}{1},{2}{3} -> {4}{5}",
-//			(char)('a' + (From / _w)), From % _w,
-//			(char)('a' + (Over / _w)), Over % _w,
-//			(char)('a' + (To / _w)), To % _w
-//		);
-//	}
 }
 
 static bool DisplayAndRollbackMove(P[] b, int nr, Fot move)
