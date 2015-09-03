@@ -12,7 +12,7 @@ void Main()
 	var c = b[h * w / 2];
 	var s = c.L[1];
 	sCount = 0;
-	s.M(c, count);
+	s.Move(c, count);
 	sCount.Dump();
 }
 
@@ -21,18 +21,20 @@ static int sCount = 0;
 public class Peg
 {
 	public bool Value;
+	
+	public bool IsCorner;
 
-	public Peg[] U = new Peg[2];
-	public Peg[] D = new Peg[2];
-	public Peg[] L = new Peg[2];
-	public Peg[] R = new Peg[2];
+	public Peg[] U = new Peg[2]; //Up
+	public Peg[] D = new Peg[2]; //Down
+	public Peg[] L = new Peg[2]; //Left
+	public Peg[] R = new Peg[2]; //Right
 
-	public bool CanML => L[1] != null && L[0] != null && Value && L[0].Value && !L[1].Value;
-	public bool CanMR => R[1] != null && R[0] != null && Value && R[0].Value && !R[1].Value;
-	public bool CanMU => U[1] != null && U[0] != null && Value && U[0].Value && !U[1].Value;
-	public bool CanMD => D[1] != null && D[0] != null && Value && D[0].Value && !D[1].Value;
+	public bool CanMoveL => L[1] != null && L[0] != null && Value && L[0].Value && !L[1].Value;
+	public bool CanMoveR => R[1] != null && R[0] != null && Value && R[0].Value && !R[1].Value;
+	public bool CanMoveU => U[1] != null && U[0] != null && Value && U[0].Value && !U[1].Value;
+	public bool CanMoveD => D[1] != null && D[0] != null && Value && D[0].Value && !D[1].Value;
 
-	public bool M(Peg v2, int count)
+	public bool Move(Peg v2, int count)
 	{
 		Peg v1 = null; //Over, v2 = To
 
@@ -59,34 +61,37 @@ public class Peg
 		//Signal:
 
 		//Can move in over:
-		if (v1.U[0] == this || v1.U[0] == v2)
+		if (!this.IsCorner) //Not possible to jump over corners.
 		{
-			if (v1.L[1] != null && v1.L[0].Value && v1.L[1].Value && v1.L[1].M(v1, count)) return true;
-			if (v1.R[1] != null && v1.R[0].Value && v1.R[1].Value && v1.R[1].M(v1, count)) return true;
-		}
-		else //if (v1.L[0] == this || v1.L[0] == v2)
-		{
-			if (v1.U[1] != null && v1.U[0].Value && v1.U[1].Value && v1.U[1].M(v1, count)) return true;
-			if (v1.D[1] != null && v1.D[0].Value && v1.D[1].Value && v1.D[1].M(v1, count)) return true;
+			if (v1.U[0] == this || v1.U[0] == v2)
+			{
+				if (v1.L[1] != null && v1.L[0].Value && v1.L[1].Value && v1.L[1].Move(v1, count)) return true;
+				if (v1.R[1] != null && v1.R[0].Value && v1.R[1].Value && v1.R[1].Move(v1, count)) return true;
+			}
+			else
+			{
+				if (v1.U[1] != null && v1.U[0].Value && v1.U[1].Value && v1.U[1].Move(v1, count)) return true;
+				if (v1.D[1] != null && v1.D[0].Value && v1.D[1].Value && v1.D[1].Move(v1, count)) return true;
+			}
 		}
 
 		//Can move in here:
-		if (U[1] != null && U[1] != v2 && U[1].Value && U[0].Value && U[1].M(this, count)) return true;
-		if (D[1] != null && D[1] != v2 && D[1].Value && D[0].Value && D[1].M(this, count)) return true;
-		if (L[1] != null && L[1] != v2 && L[1].Value && L[0].Value && L[1].M(this, count)) return true;
-		if (R[1] != null && R[1] != v2 && R[1].Value && R[0].Value && R[1].M(this, count)) return true;
+		if (U[1] != null && U[1] != v2 && U[1].Value && U[0].Value && U[1].Move(this, count)) return true;
+		if (D[1] != null && D[1] != v2 && D[1].Value && D[0].Value && D[1].Move(this, count)) return true;
+		if (L[1] != null && L[1] != v2 && L[1].Value && L[0].Value && L[1].Move(this, count)) return true;
+		if (R[1] != null && R[1] != v2 && R[1].Value && R[0].Value && R[1].Move(this, count)) return true;
 
 		//Can move from to:
-		if (v2.CanMD && v2.M(v2.D[1], count)) return true;
-		if (v2.CanMU && v2.M(v2.U[1], count)) return true;
-		if (v2.CanML && v2.M(v2.L[1], count)) return true;
-		if (v2.CanMR && v2.M(v2.R[1], count)) return true;
+		if (v2.CanMoveD && v2.Move(v2.D[1], count)) return true;
+		if (v2.CanMoveU && v2.Move(v2.U[1], count)) return true;
+		if (v2.CanMoveL && v2.Move(v2.L[1], count)) return true;
+		if (v2.CanMoveR && v2.Move(v2.R[1], count)) return true;
 
 		//Can move over to:
-		if(v2.U[0] != null && v2.U[0].CanMD && v2.U[0].M(v2.D[0], count)) return true;
-		if(v2.D[0] != null && v2.D[0].CanMU && v2.D[0].M(v2.U[0], count)) return true;
-		if(v2.L[0] != null && v2.L[0].CanMR && v2.L[0].M(v2.R[0], count)) return true;
-		if(v2.R[0] != null && v2.R[0].CanML && v2.R[0].M(v2.L[0], count)) return true;
+		if(v2.U[0] != null && v2.U[0].CanMoveD && v2.U[0].Move(v2.D[0], count)) return true;
+		if(v2.D[0] != null && v2.D[0].CanMoveU && v2.D[0].Move(v2.U[0], count)) return true;
+		if(v2.L[0] != null && v2.L[0].CanMoveR && v2.L[0].Move(v2.R[0], count)) return true;
+		if(v2.R[0] != null && v2.R[0].CanMoveL && v2.R[0].Move(v2.L[0], count)) return true;
 
 		//Rolback:
 		Value = true; v1.Value = true; v2.Value = false;
@@ -120,7 +125,16 @@ public Peg[] Config(int h, int w)
 
 			if (y < h - 1) obj.D[0] = b[y * w + x + w];
 			if (y < h - 2) obj.D[1] = b[y * w + x + (2 * w)];
+
+			var sides = 0;
+			if (obj.U[0] != null) sides++;
+			if (obj.D[0] != null) sides++;
+			if (obj.L[0] != null) sides++;
+			if (obj.R[0] != null) sides++;
+			if(sides == 2)
+				obj.IsCorner = true;
 		}
 	}
+
 	return b;
 }
