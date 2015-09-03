@@ -60,9 +60,9 @@ public class Peg
 
 		//Signal:
 
-		//Can move in over:
 		if (!this.IsCorner) //Not possible to jump over corners.
 		{
+			//Can move in over:
 			if (v1.U[0] == this || v1.U[0] == v2)
 			{
 				if (v1.L[1] != null && v1.L[0].Value && v1.L[1].Value && v1.L[1].Move(v1, count)) return true;
@@ -88,10 +88,13 @@ public class Peg
 		if (v2.CanMoveR && v2.Move(v2.R[1], count)) return true;
 
 		//Can move over to:
-		if(v2.U[0] != null && v2.U[0].CanMoveD && v2.U[0].Move(v2.D[0], count)) return true;
-		if(v2.D[0] != null && v2.D[0].CanMoveU && v2.D[0].Move(v2.U[0], count)) return true;
-		if(v2.L[0] != null && v2.L[0].CanMoveR && v2.L[0].Move(v2.R[0], count)) return true;
-		if(v2.R[0] != null && v2.R[0].CanMoveL && v2.R[0].Move(v2.L[0], count)) return true;
+		if (!v2.IsCorner)
+		{
+			if (v2.U[0] != null && v2.U[0].CanMoveD && v2.U[0].Move(v2.D[0], count)) return true;
+			if (v2.D[0] != null && v2.D[0].CanMoveU && v2.D[0].Move(v2.U[0], count)) return true;
+			if (v2.L[0] != null && v2.L[0].CanMoveR && v2.L[0].Move(v2.R[0], count)) return true;
+			if (v2.R[0] != null && v2.R[0].CanMoveL && v2.R[0].Move(v2.L[0], count)) return true;
+		}
 
 		//Rolback:
 		Value = true; v1.Value = true; v2.Value = false;
